@@ -1,9 +1,10 @@
 <html>
 <head>
 	<title>Scroll Demo</title>
-	<!--<link rel="stylesheet" href="css/scroll.css" />-->
+	<link rel="stylesheet" href="css/stylesheet.css" />
+	<link rel="stylesheet" href="lib/scroll/css/scroll.css" />
 	<!--<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-	<script type="text/javascript" src="js/scroll.js"></script>-->
+
 
 	<!-- load the jQuery and require.js libraries -->
 	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -11,44 +12,22 @@
 
 	<!-- load the CKEditor core -->
 	<script src="lib/ckeditor/ckeditor.js"></script>
-	<script>
-		$(document).ready(function(){
-			var keysDown = [];
-			$('#content').on('keydown', function(e){
-				keysDown[e.keyCode] = true;
-				console.log(e.keyCode);
-				if(e.keyCode == 9) { //tab
-						e.preventDefault();
-					if(keysDown[16] === true){ //shift is 16
-						//TODO: make shift(16)-tab(9) delete any previous tab in the line.
-						
-					}else{
-						insertTextAtCursor('\t');	
-					}
-				}
-			});
+	<script src="lib/scroll/scroll.js" id="scroll"></script>
+	<script src="lib/scroll/scroll-widgets.js"></script>
 
-			$('#content').on('keyup', function(e){
-				keysDown[e.keyCode] = false;
-			});
-		});
-
-
-		function insertTextAtCursor(text) { 
-			var sel, range, html; 
-			sel = window.getSelection();
-			range = sel.getRangeAt(0); 
-			range.deleteContents(); 
-			var textNode = document.createTextNode(text);
-			range.insertNode(textNode);
-			range.setStartAfter(textNode);
-			sel.removeAllRanges();
-			sel.addRange(range);
-		}
-	</script>
 
 	<!-- make all elements with class="editable" editable with Aloha Editor -->
 	<script>
+		var scrl = new Scroll({
+			elemId:"content", 
+			statusElemId: "footer",
+			id: "scroll", //default
+			locale: "en-US"
+		});
+		var scrlWidgets = new ScrollWidgets(scrl, [
+			'captioned-image'
+		]);
+
 		/*var $ = Aloha.jQuery;
 		
 		var panel = Aloha.Sidebar.right.addPanel({
@@ -89,134 +68,8 @@
 			});
 
 			$('#content').aloha();
-		});
-
-		//load saved content before render but after the document is loaded.
-		$(document).ready(function(){
-			if(localStorage.scroll){
-				var scrollContent = JSON.parse(localStorage.scroll);
-				for(var i in scrollContent){
-					$("#"+i).html(scrollContent[i]);
-				}
-			}
-		});
-
-		var saveTimeout;
-		function save(Aloha){
-			if(!Aloha){ console.warn("Called save without a valid Aloha object."); return; }
-			clearTimeout(saveTimeout);
-			$("footer").html("Saving...");
-
-			var editables = Aloha.editables;
-			var content, contentId;
-			//there should only be one here (#content)
-			for(var i=0; i<editables.length; i++){
-				content = editables[i].obj[0].innerHTML;
-				contentId = editables[i].obj[0].id;
-			}
-
-			var pageId = window.location.pathname;
-			
-			// textarea handling -- html id is "xy" and will be "xy-aloha" for the aloha editable
-			if ( contentId.match(/-aloha$/gi) ) {
-				contentId = contentId.replace( /-aloha/gi, '' );
-			}
-
-			// SAVE DATA
-			//var request = jQuery.ajax({
-			//	url: "save.php",
-			//	type: "POST",
-			//	data: {
-			//		content : content,
-			//		contentId : contentId,
-			//		pageId : pageId
-			//	},
-			//	dataType: "html"
-			//});
-			if(!localStorage.scroll){
-				localStorage.scroll = JSON.stringify({});
-			}
-			var newScroll = JSON.parse(localStorage.scroll);
-			newScroll[contentId] = content;
-			localStorage.scroll = JSON.stringify(newScroll);
-
-			$("footer").html("Save successful");
-
-			saveTimeout = setTimeout(function(){
-				$("footer").empty();				
-			}, 3000)
-		}*/
+		});*/
 	</script>
-
-	<style type="text/css">
-		* {
-			margin: 0;
-			padding: 0;
-		}
-		*, *:before, *:after {
-			-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
-		}
-		*[contenteditable="true"]
-		{
-			padding: 10px;
-		}
-		html, body {
-			height: 100%;
-		}
-		header {
-			height: 75px;
-			padding:10px;
-			border-bottom:1px solid black;
-			box-shadow: inset 0px -10px 10px -10px #333;
-			background: #ccc;
-		}
-		footer {
-			height: 26px;
-			background: #999;
-			border-top: 1px solid black;
-			box-shadow: inset 0px 1px 2px 0px #fff;
-			padding: 4px 5px 4px 5px;
-			color: #fff;
-			font-family: sans-serif;
-			font-size: 14px;
-			text-shadow: 2px 1px #666;
-		}
-		#content {
-			margin: 20px 50px 20px 50px;
-			padding: 20px 20px 20px 20px;
-			box-shadow: 0px 5px 10px 0px #888;
-			/* height of header+footer */
-			height: calc(100% - 142px);
-			white-space: pre;
-		}
-		.aloha-sidebar-panels ul {
-			margin: 0;
-			padding: 0;
-		}
-		.aloha-sidebar-panels li {
-			border-bottom: 1px solid #666;
-			padding:5px;
-			width: auto;
-		}
-		.aloha-sidebar-panel-content-inner {
-			margin: 0;
-			padding: 0;
-		}
-		@media print {
-			#content {
-				display: block !important;
-				position: absolute;
-				left: 40;
-				top: 40;
-				box-shadow: none;
-				margin: 0;
-			}
-			header, footer, body > div, body > table {
-				display: none !important;
-			}
-			
-		}
-	</style>
 </head>
 
 <body>

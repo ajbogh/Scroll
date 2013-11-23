@@ -1,0 +1,89 @@
+#scroll-sidebar {
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 340px;
+	height:100%;
+	transition: width 0.5s;
+	overflow:hidden;
+}
+#scroll-sidebar-content {
+	width: 300px;
+	transition: width 0.5s;
+}
+#scroll-sidebar.closed {
+	width: 40px;
+	overflow:hidden;
+}
+#scroll-sidebar.closed>#scroll-sidebar-content {
+	border: none;
+}
+#scroll-sidebar-content {
+	font-family: sans-serif;
+	height: 100%;
+	background: white;
+	box-shadow: -2px 0px 10px rgba(150,150,150,0.85), 0px 0px 0px rgba(0,0,0,.7);
+	border-left: 1px solid black;
+	margin-left: 40px;
+	margin-top: -90px;
+}
+#scroll-sidebar-title {
+	background: #999;
+	padding: 5px;
+	height: 40px;
+	text-align: center;
+	border-bottom: 1px solid black;
+	color: white;
+}
+#scroll-sidebar-title h1 {
+	font-size: 24px;
+}
+#scroll-sidebar-pullout-button {
+	display:inline-block;
+	background: #666;
+	width: 40px;
+	height: 40px;
+	margin-top: 50px;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	padding-left: 7px;
+	color: white;
+	font-weight: bold;
+	font-size: 30px;
+	box-shadow: -2px 2px 10px rgba(150,150,150,0.85), 0px 0px 0px rgba(0,0,0,.7);
+}
+#scroll-sidebar-pullout-button:after {
+	content: "\25B6";
+}
+#scroll-sidebar-pullout-button.closed:after {
+	content: "\25C0";
+}
+#scroll-sidebar-pullout-button:hover {
+	background-color: #777;
+}
+#scroll-sidebar-panels {
+	padding: 10px;
+	list-style-type: none;
+	text-align: center;
+	overflow-y: auto;
+	height: 100%;
+}
+.scroll-sidebar-panel {
+	list-style-type: none;
+	text-align: center;
+	border: 1px solid #666;
+	border-top-left-radius: 7px;
+	border-top-right-radius: 7px;
+	margin-bottom:10px;
+}
+.scroll-sidebar-panel-image {
+	padding:10px;
+}
+#scroll-sidebar-panels h2 {
+	font-size: 16px;
+	color: white;
+	background: #666;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+	padding:2px;
+}
