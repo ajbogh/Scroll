@@ -12,63 +12,54 @@
 
 	<!-- load the CKEditor core -->
 	<script src="lib/ckeditor/ckeditor.js"></script>
+	<script src="lib/rtf2html/rtf.js"></script>
+	<script src="lib/rtf2html/rtf2html.js"></script>
+	<script src="lib/mustache/mustache.js"></script>
 	<script src="lib/scroll/scroll.js" id="scroll"></script>
 	<script src="lib/scroll/scroll-widgets.js"></script>
 
 
 	<!-- make all elements with class="editable" editable with Aloha Editor -->
 	<script>
+		//Mock data!
+		var fileData = {};
+		$.ajax({
+			"url": "js/data.json",
+			"dataType": "json",
+			"async": false,
+			"success": function(data){
+				fileData = data;
+			},
+			"error": function(){
+				console.log("Could not load data");
+			}
+		});
+
 		var scrl = new Scroll({
 			elemId:"content", 
 			statusElemId: "footer",
 			id: "scroll", //default
-			locale: "en-US"
+			locale: "en-US",
+			//, saveFunction: function(){} //custom save function, default is saved to localStorage
+			loadFunction: function(){
+				$.ajax({
+					"url":"doc.rtf",
+					"dataType":"text",
+					"success":function(data){
+						var out = Rtf2Html(data, null, out);
+						var out = Mustache.render(out, fileData);
+						scrl.loadHtml(out);
+					},
+					"error":function(){
+						console.log("could not load file");
+					}
+				});
+			} //custom load function, default is loaded from localStorage on page load
 		});
 		var scrlWidgets = new ScrollWidgets(scrl, [
 			'captioned-image'
-		]);
+		], "content");
 
-		/*var $ = Aloha.jQuery;
-		
-		var panel = Aloha.Sidebar.right.addPanel({
-			// the id of your new Panel
-			id: 'new-panel',
-			// title to be set for your Panel
-			title : 'Widgets',
-			// initial html content of your panel
-			content : '<ul><li>Test Widget</li>'+
-				'<li>Google Map Widget</li></ul>',
-			// whether the panel should be expanded initially
-			expanded : true
-		});
-
-		Aloha.ready( function() {
-			$("#new-panel li").prop("draggable", true);
-
-			$("#content").on("dragover", function(e){
-				e.originalEvent.stopPropagation();
-				e.originalEvent.preventDefault();
-				//Do nothing. This is required for Chrome's drop to work.
-			});
-
-			$("#content").on("drop", function(e){
-				e.originalEvent.stopPropagation();
-				e.originalEvent.preventDefault();
-				console.log("dropped3", e);
-			});
-
-			Aloha.require( ['aloha', 'aloha/jquery'], function( Aloha, jQuery) {
-				
-				// save all changes after leaving an editable
-				Aloha.bind('aloha-editable-deactivated', function(){
-					save(Aloha);
-				});
-
-				setInterval(function(){ save(Aloha); }, 5000);
-			});
-
-			$('#content').aloha();
-		});*/
 	</script>
 </head>
 
@@ -76,7 +67,7 @@
 	<header id="header">
 		<h1>Scroll</h1>
 	</header>
-	<div id="content" contenteditable="true"><p>test</p></div>
-	<footer></footer>
+	<div id="content" contenteditable="true"></div>
+	<footer id="footer"></footer>
 </body>
 </html>

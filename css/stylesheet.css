@@ -35,7 +35,7 @@ footer {
 	padding: 20px 20px 20px 20px;
 	box-shadow: 0px 5px 10px 0px #888;
 	/* height of header+footer */
-	height: calc(100% - 142px);
+	min-height: calc(100% - 142px);
 	white-space: pre;
 }
 
