@@ -15,6 +15,7 @@
 	<script src="lib/rtf2html/rtf.js"></script>
 	<script src="lib/rtf2html/rtf2html.js"></script>
 	<script src="lib/mustache/mustache.js"></script>
+	<script src="lib/ToggleTemplate/tt.js"></script>
 	<script src="lib/scroll/scroll.js" id="scroll"></script>
 	<script src="lib/scroll/scroll-widgets.js"></script>
 
@@ -41,14 +42,19 @@
 			id: "scroll", //default
 			locale: "en-US",
 			//, saveFunction: function(){} //custom save function, default is saved to localStorage
-			loadFunction: function(){
+			loadFunction: function(editor){
+				var self = this;
 				$.ajax({
 					"url":"doc.rtf",
 					"dataType":"text",
 					"success":function(data){
-						var out = Rtf2Html(data, null, out);
-						var out = Mustache.render(out, fileData);
-						scrl.loadHtml(out);
+						var template = Rtf2Html(data, null);
+						//var out = Mustache.render(template, fileData);
+						var tt = new ToggleTemplate();
+						self.setToggleTemplate(tt);
+						var ttOut = tt.render(template, fileData);
+						scrl.loadHtml(ttOut, null, template, editor);
+						editor.templateProcessor = tt;
 					},
 					"error":function(){
 						console.log("could not load file");
